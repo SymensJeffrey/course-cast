@@ -111,7 +111,7 @@ export default function Home() {
           >
             <option value="">Select Course</option>
             {courses.map((course) => (
-              <option key={course.id} value={course.id}>
+              <option key={course.course_id} value={course.course_id}>
                 {course.name}
               </option>
             ))}

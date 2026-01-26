@@ -1,4 +1,4 @@
 export type Course = {
-  id: string;
+  course_id: string;
   name: string;
 };
