@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/Modal';
 
+import { Course } from '@/types/course';
+
 export default function Home() {
   const router = useRouter();
   const [createOpen, setCreateOpen] = useState(false);
@@ -14,13 +16,26 @@ export default function Home() {
   const [code, setCode] = useState('');
   const [error, setError] = useState('');
 
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [courseId, setCourseId] = useState('');
+
+  async function loadCourses() {
+    const res = await fetch('/api/courses');
+    const data: Course[] = await res.json();
+    setCourses(data);
+  }
+
+
   async function handleCreateTournament() {
     setLoading(true);
     setError('');
 
     const res = await fetch('/api/tournaments/create', {
       method: 'POST',
-      body: JSON.stringify({ name: tournamentName }),
+      body: JSON.stringify({
+        name: tournamentName,
+        courseId
+      }),
     });
 
     const data = await res.json();
@@ -34,6 +49,7 @@ export default function Home() {
 
     router.push(`/admin/${data.admin_code}`);
   }
+
 
   async function handleEnterCode() {
     setLoading(true);
@@ -65,7 +81,7 @@ export default function Home() {
       <h1 className="text-3xl font-bold">Welcome to Course Cast</h1>
 
       <div className="flex gap-4">
-        <Button onClick={() => setCreateOpen(true)}>
+        <Button onClick={() => { setCreateOpen(true); loadCourses(); }}>
           Create Tournament
         </Button>
         <Button variant="outline" onClick={() => setCodeOpen(true)}>
@@ -87,16 +103,34 @@ export default function Home() {
             onChange={(e) => setTournamentName(e.target.value)}
             className="w-full border rounded px-3 py-2"
           />
+
+          <select
+            value={courseId}
+            onChange={(e) => setCourseId(e.target.value)}
+            className="w-full border rounded px-3 py-2"
+          >
+            <option value="">Select Course</option>
+            {courses.map((course) => (
+              <option key={course.id} value={course.id}>
+                {course.name}
+              </option>
+            ))}
+          </select>
+
+
+
           {error && <p className="text-red-500 text-sm">{error}</p>}
+
           <Button
             className="w-full"
             onClick={handleCreateTournament}
-            disabled={loading || !tournamentName}
+            disabled={loading || !tournamentName || !courseId}
           >
             {loading ? 'Creating...' : 'Create'}
           </Button>
         </div>
       </Modal>
+
 
       {/* Enter Code Modal */}
       <Modal
