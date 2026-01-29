@@ -131,7 +131,6 @@ export default function Home() {
         </div>
       </Modal>
 
-
       {/* Enter Code Modal */}
       <Modal
         isOpen={codeOpen}
