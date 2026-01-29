@@ -13,10 +13,14 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
   }
 
+  const tournamentCode = crypto.getRandomValues(new Uint32Array(1))[0]
+    .toString()
+    .slice(0, 6);
+
   const { data, error } = await supabaseServer
     .from('Tournaments')
-    .insert([{ name, course_id: courseId }])
-    .select()
+    .insert([{ name, course_id: courseId, tournament_code: tournamentCode }])
+    .select('tournament_code')
     .single();
 
   console.log("Supabase result:", { data, error });

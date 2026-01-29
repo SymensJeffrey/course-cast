@@ -47,7 +47,7 @@ export default function Home() {
       return;
     }
 
-    router.push(`/admin/${data.admin_code}`);
+    router.push(`/admin/${data.tournament_code}`);
   }
 
 
@@ -81,10 +81,10 @@ export default function Home() {
       <h1 className="text-3xl font-bold">Welcome to Course Cast</h1>
 
       <div className="flex gap-4">
-        <Button onClick={() => { setCreateOpen(true); loadCourses(); }}>
+        <Button variant="outline" onClick={() => { setCreateOpen(true); loadCourses(); }}>
           Create Tournament
         </Button>
-        <Button variant="outline" onClick={() => setCodeOpen(true)}>
+        <Button onClick={() => setCodeOpen(true)}>
           Enter Tournament Code
         </Button>
       </div>
