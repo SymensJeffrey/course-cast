@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   const { data, error } = await supabaseServer
-    .from('Courses')
+    .from('courses')
     .select('course_id, name')
     .order('name');
 

@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     .slice(0, 6);
 
   const { data, error } = await supabaseServer
-    .from('Tournaments')
+    .from('tournaments')
     .insert([{ name, course_id: courseId, tournament_code: tournamentCode }])
     .select('tournament_code')
     .single();
