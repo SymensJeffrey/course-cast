@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Copy, Check } from 'lucide-react'
 
 export function CopyButton({ value }: { value: string }) {
   const [copied, setCopied] = useState(false);
@@ -15,11 +16,15 @@ export function CopyButton({ value }: { value: string }) {
 
   return (
     <Button
-      variant="outline"
+      variant="ghost"
       size="sm"
       onClick={handleCopy}
     >
-      {copied ? 'Copied!' : 'Copy'}
+      {copied ? (
+        <Check className="h-4 w-4" />
+      ) : (
+        <Copy className="h-4 w-4" />
+      )}
     </Button>
   );
 }
