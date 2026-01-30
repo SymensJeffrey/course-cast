@@ -7,6 +7,15 @@ import { Modal } from '@/components/Modal';
 
 import { Course } from '@/types/course';
 
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@/components/ui/combobox"
+
 export default function Home() {
   const router = useRouter();
   const [createOpen, setCreateOpen] = useState(false);
