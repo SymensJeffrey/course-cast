@@ -8,13 +8,12 @@ import { Modal } from '@/components/Modal';
 import { Course } from '@/types/course';
 
 import {
-  Combobox,
-  ComboboxContent,
-  ComboboxEmpty,
-  ComboboxInput,
-  ComboboxItem,
-  ComboboxList,
-} from "@/components/ui/combobox"
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 export default function Home() {
   const router = useRouter();
@@ -112,19 +111,18 @@ export default function Home() {
             onChange={(e) => setTournamentName(e.target.value)}
             className="w-full border rounded px-3 py-2"
           />
-
-          <select
-            value={courseId}
-            onChange={(e) => setCourseId(e.target.value)}
-            className="w-full border rounded px-3 py-2"
-          >
-            <option value="">Select Course</option>
-            {courses.map((course) => (
-              <option key={course.course_id} value={course.course_id}>
-                {course.name}
-              </option>
-            ))}
-          </select>
+          <Select value={courseId} onValueChange={setCourseId}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select Course" />
+            </SelectTrigger>
+            <SelectContent>
+              {courses.map((course) => (
+                <SelectItem key={course.course_id} value={course.course_id}>
+                  {course.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
 
 
