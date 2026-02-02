@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Input } from '@/components/ui/input';
 
 export default function Home() {
   const router = useRouter();
@@ -22,6 +23,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [tournamentName, setTournamentName] = useState('');
   const [code, setCode] = useState('');
+  const [name, setName] = useState('');
   const [error, setError] = useState('');
 
   const [courses, setCourses] = useState<Course[]>([]);
@@ -104,7 +106,7 @@ export default function Home() {
         title="Create Tournament"
       >
         <div className="space-y-4">
-          <input
+          <Input
             type="text"
             placeholder="Tournament Name"
             value={tournamentName}
@@ -145,12 +147,19 @@ export default function Home() {
         title="Enter Tournament Code"
       >
         <div className="space-y-4">
-          <input
+          <Input
             type="text"
             placeholder="Tournament Code"
             value={code}
             onChange={(e) => setCode(e.target.value.toUpperCase())}
-            className="w-full border rounded px-3 py-2 uppercase tracking-widest"
+            className="w-full border rounded px-3 py-2"
+          />
+          <Input
+            type="text"
+            placeholder="Team Name"
+            value={name}
+            onChange={(e) => setName(e.target.value.toUpperCase())}
+            className="w-full border rounded px-3 py-2"
           />
           {error && <p className="text-red-500 text-sm">{error}</p>}
           <Button
