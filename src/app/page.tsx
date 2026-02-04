@@ -64,25 +64,6 @@ export default function Home() {
     setLoading(true);
     setError('');
 
-    const validateRes = await fetch('/api/tournaments/validate', {
-      method: 'POST',
-      body: JSON.stringify({ code }),
-    });
-
-    const validateData = await validateRes.json();
-
-    if (!validateRes.ok) {
-      setLoading(false);
-      setError(validateData.error || 'Invalid code');
-      return;
-    }
-
-    if (validateData.isAdmin) {
-      setLoading(false);
-      router.push(`/admin/${code}`);
-      return;
-    }
-
     const teamRes = await fetch('/api/teams/create', {
       method: 'POST',
       headers: {
