@@ -60,30 +60,50 @@ export default function Home() {
     router.push(`/admin/${data.tournament_code}`);
   }
 
-
   async function handleEnterCode() {
     setLoading(true);
     setError('');
 
-    const res = await fetch('/api/tournaments/validate', {
+    const validateRes = await fetch('/api/tournaments/validate', {
       method: 'POST',
       body: JSON.stringify({ code }),
     });
 
-    const data = await res.json();
+    const validateData = await validateRes.json();
 
-    setLoading(false);
-
-    if (!res.ok) {
-      setError(data.error || 'Invalid code');
+    if (!validateRes.ok) {
+      setLoading(false);
+      setError(validateData.error || 'Invalid code');
       return;
     }
 
-    if (data.isAdmin) {
+    if (validateData.isAdmin) {
+      setLoading(false);
       router.push(`/admin/${code}`);
-    } else {
-      router.push(`/t/${code}`);
+      return;
     }
+
+    const teamRes = await fetch('/api/teams/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        tournamentCode: code,
+        teamName: name,
+      }),
+    });
+
+    const teamData = await teamRes.json();
+
+    setLoading(false);
+
+    if (!teamRes.ok) {
+      setError(teamData.error || 'Failed to create team');
+      return;
+    }
+
+    router.push(`/t/${code}`);
   }
 
   return (
