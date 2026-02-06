@@ -29,12 +29,33 @@ export default function Home() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [courseId, setCourseId] = useState('');
 
+  // Check localStorage when code input changes
+  function handleCodeChange(value: string) {
+    const upperValue = value.toUpperCase();
+    setCode(upperValue);
+
+    // Check if we have stored team info for this tournament
+    if (upperValue && typeof window !== 'undefined') {
+      const storedTeam = localStorage.getItem(`team_${upperValue}`);
+      if (storedTeam) {
+        try {
+          const teamData = JSON.parse(storedTeam);
+          setName(teamData.teamName);
+        } catch (e) {
+          console.error('Error parsing stored team data:', e);
+        }
+      } else {
+        // Clear name if switching to a tournament we haven't joined
+        setName('');
+      }
+    }
+  }
+
   async function loadCourses() {
     const res = await fetch('/api/courses');
     const data: Course[] = await res.json();
     setCourses(data);
   }
-
 
   async function handleCreateTournament() {
     setLoading(true);
@@ -64,6 +85,54 @@ export default function Home() {
     setLoading(true);
     setError('');
 
+    // First validate the tournament code
+    const validateRes = await fetch('/api/tournaments/validate', {
+      method: 'POST',
+      body: JSON.stringify({ code }),
+    });
+
+    const validateData = await validateRes.json();
+
+    if (!validateRes.ok) {
+      setLoading(false);
+      setError(validateData.error || 'Invalid code');
+      return;
+    }
+
+    // If admin, go directly to admin page
+    if (validateData.isAdmin) {
+      setLoading(false);
+      router.push(`/admin/${code}`);
+      return;
+    }
+
+    // Check if team already exists for this tournament
+    const checkTeamRes = await fetch('/api/teams/check', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        tournamentCode: code,
+        teamName: name,
+      }),
+    });
+
+    const checkTeamData = await checkTeamRes.json();
+
+    if (checkTeamRes.ok && checkTeamData.exists) {
+      // Team already exists, just store info and redirect
+      localStorage.setItem(`team_${code}`, JSON.stringify({
+        teamId: checkTeamData.team.team_id,
+        teamName: checkTeamData.team.name,
+        tournamentCode: code,
+      }));
+      setLoading(false);
+      router.push(`/t/${code}`);
+      return;
+    }
+
+    // If not admin and team doesn't exist, create the team
     const teamRes = await fetch('/api/teams/create', {
       method: 'POST',
       headers: {
@@ -84,6 +153,14 @@ export default function Home() {
       return;
     }
 
+    // Store team info in localStorage
+    localStorage.setItem(`team_${code}`, JSON.stringify({
+      teamId: teamData.team.team_id,
+      teamName: teamData.team.name,
+      tournamentCode: code,
+    }));
+
+    // Successfully created team, navigate to tournament page
     router.push(`/t/${code}`);
   }
 
@@ -126,9 +203,6 @@ export default function Home() {
               ))}
             </SelectContent>
           </Select>
-
-
-
           {error && <p className="text-red-500 text-sm">{error}</p>}
 
           <Button
@@ -152,21 +226,21 @@ export default function Home() {
             type="text"
             placeholder="Tournament Code"
             value={code}
-            onChange={(e) => setCode(e.target.value.toUpperCase())}
+            onChange={(e) => handleCodeChange(e.target.value)}
             className="w-full border rounded px-3 py-2"
           />
           <Input
             type="text"
             placeholder="Team Name"
             value={name}
-            onChange={(e) => setName(e.target.value.toUpperCase())}
+            onChange={(e) => setName(e.target.value)}
             className="w-full border rounded px-3 py-2"
           />
           {error && <p className="text-red-500 text-sm">{error}</p>}
           <Button
             className="w-full"
             onClick={handleEnterCode}
-            disabled={loading || !code}
+            disabled={loading || !code || !name}
           >
             {loading ? 'Checking...' : 'Enter'}
           </Button>

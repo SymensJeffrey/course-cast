@@ -11,7 +11,7 @@ export async function POST(req: Request) {
   const { data, error } = await supabaseServer
     .from('tournaments')
     .select('*')
-    .or(`public_code.eq.${code},admin_code.eq.${code}`)
+    .or(`tournament_code.eq.${code}`)
     .single();
 
   if (error || !data) {
