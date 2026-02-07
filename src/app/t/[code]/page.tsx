@@ -325,192 +325,203 @@ export default function TournamentPage({
   }
 
   return (
-    <div className="p-6 max-w-[1400px] mx-auto">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold">Tournament Scoreboard</h1>
-        <p className="text-muted-foreground">Code: {code}</p>
-        {teamName && <p className="text-sm">Your Team: {teamName}</p>}
+    <div className="p-4 md:p-6">
+      <div className="max-w-[1400px] mx-auto">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold">Tournament Scoreboard</h1>
+          <p className="text-muted-foreground">Code: {code}</p>
+          {teamName && <p className="text-sm">Your Team: {teamName}</p>}
+        </div>
       </div>
 
-      <div className="rounded-md border overflow-x-auto mb-8">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="sticky left-0 bg-background z-10 min-w-[150px]">Team</TableHead>
-              <TableHead className="text-center">1</TableHead>
-              <TableHead className="text-center">2</TableHead>
-              <TableHead className="text-center">3</TableHead>
-              <TableHead className="text-center">4</TableHead>
-              <TableHead className="text-center">5</TableHead>
-              <TableHead className="text-center">6</TableHead>
-              <TableHead className="text-center">7</TableHead>
-              <TableHead className="text-center">8</TableHead>
-              <TableHead className="text-center">9</TableHead>
-              <TableHead className="text-center font-semibold bg-muted">Out</TableHead>
-              <TableHead className="text-center">10</TableHead>
-              <TableHead className="text-center">11</TableHead>
-              <TableHead className="text-center">12</TableHead>
-              <TableHead className="text-center">13</TableHead>
-              <TableHead className="text-center">14</TableHead>
-              <TableHead className="text-center">15</TableHead>
-              <TableHead className="text-center">16</TableHead>
-              <TableHead className="text-center">17</TableHead>
-              <TableHead className="text-center">18</TableHead>
-              <TableHead className="text-center font-semibold bg-muted">In</TableHead>
-              <TableHead className="text-center font-bold bg-primary text-primary-foreground">Total</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {/* Par Row */}
-            {course && (
-              <TableRow className="bg-muted/50 font-semibold">
-                <TableCell className="sticky left-0 bg-muted/50">Par</TableCell>
-                <TableCell className="text-center">{course.hole_1_par}</TableCell>
-                <TableCell className="text-center">{course.hole_2_par}</TableCell>
-                <TableCell className="text-center">{course.hole_3_par}</TableCell>
-                <TableCell className="text-center">{course.hole_4_par}</TableCell>
-                <TableCell className="text-center">{course.hole_5_par}</TableCell>
-                <TableCell className="text-center">{course.hole_6_par}</TableCell>
-                <TableCell className="text-center">{course.hole_7_par}</TableCell>
-                <TableCell className="text-center">{course.hole_8_par}</TableCell>
-                <TableCell className="text-center">{course.hole_9_par}</TableCell>
-                <TableCell className="text-center bg-muted">{parTotals.frontNine}</TableCell>
-                <TableCell className="text-center">{course.hole_10_par}</TableCell>
-                <TableCell className="text-center">{course.hole_11_par}</TableCell>
-                <TableCell className="text-center">{course.hole_12_par}</TableCell>
-                <TableCell className="text-center">{course.hole_13_par}</TableCell>
-                <TableCell className="text-center">{course.hole_14_par}</TableCell>
-                <TableCell className="text-center">{course.hole_15_par}</TableCell>
-                <TableCell className="text-center">{course.hole_16_par}</TableCell>
-                <TableCell className="text-center">{course.hole_17_par}</TableCell>
-                <TableCell className="text-center">{course.hole_18_par}</TableCell>
-                <TableCell className="text-center bg-muted">{parTotals.backNine}</TableCell>
-                <TableCell className="text-center bg-primary text-primary-foreground">{parTotals.total}</TableCell>
-              </TableRow>
-            )}
-
-            {/* Team Rows */}
-            {teams.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={22} className="text-center text-muted-foreground">
-                  No teams yet
-                </TableCell>
-              </TableRow>
-            ) : (
-              teams.map((team, index) => {
-                const { score: scoreToPar, holesPlayed } = calculateScoreToPar(team);
-
-                return (
-                  <TableRow
-                    key={team.team_id}
-                    className={team.name === teamName ? 'bg-accent' : ''}
-                  >
-                    <TableCell className="sticky left-0 bg-background font-medium">
-                      <div className="flex items-center gap-2">
-                        <span>{index + 1}. {team.name}</span>
-                        {holesPlayed > 0 && (
-                          <span className={getScoreToParColor(scoreToPar)}>
-                            ({formatScoreToPar(scoreToPar)})
-                          </span>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-center">{team.hole_1 || '-'}</TableCell>
-                    <TableCell className="text-center">{team.hole_2 || '-'}</TableCell>
-                    <TableCell className="text-center">{team.hole_3 || '-'}</TableCell>
-                    <TableCell className="text-center">{team.hole_4 || '-'}</TableCell>
-                    <TableCell className="text-center">{team.hole_5 || '-'}</TableCell>
-                    <TableCell className="text-center">{team.hole_6 || '-'}</TableCell>
-                    <TableCell className="text-center">{team.hole_7 || '-'}</TableCell>
-                    <TableCell className="text-center">{team.hole_8 || '-'}</TableCell>
-                    <TableCell className="text-center">{team.hole_9 || '-'}</TableCell>
-                    <TableCell className="text-center font-semibold bg-muted">
-                      {team.front_nine || 0}
-                    </TableCell>
-                    <TableCell className="text-center">{team.hole_10 || '-'}</TableCell>
-                    <TableCell className="text-center">{team.hole_11 || '-'}</TableCell>
-                    <TableCell className="text-center">{team.hole_12 || '-'}</TableCell>
-                    <TableCell className="text-center">{team.hole_13 || '-'}</TableCell>
-                    <TableCell className="text-center">{team.hole_14 || '-'}</TableCell>
-                    <TableCell className="text-center">{team.hole_15 || '-'}</TableCell>
-                    <TableCell className="text-center">{team.hole_16 || '-'}</TableCell>
-                    <TableCell className="text-center">{team.hole_17 || '-'}</TableCell>
-                    <TableCell className="text-center">{team.hole_18 || '-'}</TableCell>
-                    <TableCell className="text-center font-semibold bg-muted">
-                      {team.back_nine || 0}
-                    </TableCell>
-                    <TableCell className="text-center font-bold bg-primary text-primary-foreground">
-                      {team.total_score || 0}
-                    </TableCell>
+      {/* Scoreboard - Full width on mobile with horizontal scroll */}
+      <div className="mb-8">
+        <div className="overflow-x-auto -mx-4 md:mx-0">
+          <div className="px-4 md:px-0">
+            <div className="rounded-md border min-w-[1200px] max-w-[1400px] md:mx-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="sticky left-0 bg-background z-10 min-w-[150px]">Team</TableHead>
+                    <TableHead className="text-center min-w-[40px]">1</TableHead>
+                    <TableHead className="text-center min-w-[40px]">2</TableHead>
+                    <TableHead className="text-center min-w-[40px]">3</TableHead>
+                    <TableHead className="text-center min-w-[40px]">4</TableHead>
+                    <TableHead className="text-center min-w-[40px]">5</TableHead>
+                    <TableHead className="text-center min-w-[40px]">6</TableHead>
+                    <TableHead className="text-center min-w-[40px]">7</TableHead>
+                    <TableHead className="text-center min-w-[40px]">8</TableHead>
+                    <TableHead className="text-center min-w-[40px]">9</TableHead>
+                    <TableHead className="text-center font-semibold bg-muted min-w-[50px]">Out</TableHead>
+                    <TableHead className="text-center min-w-[40px]">10</TableHead>
+                    <TableHead className="text-center min-w-[40px]">11</TableHead>
+                    <TableHead className="text-center min-w-[40px]">12</TableHead>
+                    <TableHead className="text-center min-w-[40px]">13</TableHead>
+                    <TableHead className="text-center min-w-[40px]">14</TableHead>
+                    <TableHead className="text-center min-w-[40px]">15</TableHead>
+                    <TableHead className="text-center min-w-[40px]">16</TableHead>
+                    <TableHead className="text-center min-w-[40px]">17</TableHead>
+                    <TableHead className="text-center min-w-[40px]">18</TableHead>
+                    <TableHead className="text-center font-semibold bg-muted min-w-[50px]">In</TableHead>
+                    <TableHead className="text-center font-bold bg-primary text-primary-foreground min-w-[60px]">Total</TableHead>
                   </TableRow>
-                );
-              })
-            )}
-          </TableBody>
-        </Table>
+                </TableHeader>
+                <TableBody>
+                  {/* Par Row */}
+                  {course && (
+                    <TableRow className="bg-muted/50 font-semibold">
+                      <TableCell className="sticky left-0 bg-muted/50 z-10">Par</TableCell>
+                      <TableCell className="text-center">{course.hole_1_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_2_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_3_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_4_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_5_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_6_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_7_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_8_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_9_par}</TableCell>
+                      <TableCell className="text-center bg-muted">{parTotals.frontNine}</TableCell>
+                      <TableCell className="text-center">{course.hole_10_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_11_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_12_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_13_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_14_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_15_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_16_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_17_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_18_par}</TableCell>
+                      <TableCell className="text-center bg-muted">{parTotals.backNine}</TableCell>
+                      <TableCell className="text-center bg-primary text-primary-foreground">{parTotals.total}</TableCell>
+                    </TableRow>
+                  )}
+
+                  {/* Team Rows */}
+                  {teams.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={22} className="text-center text-muted-foreground">
+                        No teams yet
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    teams.map((team, index) => {
+                      const { score: scoreToPar, holesPlayed } = calculateScoreToPar(team);
+
+                      return (
+                        <TableRow
+                          key={team.team_id}
+                          className={team.name === teamName ? 'bg-accent' : ''}
+                        >
+                          <TableCell className="sticky left-0 bg-background z-10 font-medium">
+                            <div className="flex items-center gap-2">
+                              <span>{index + 1}. {team.name}</span>
+                              {holesPlayed > 0 && (
+                                <span className={getScoreToParColor(scoreToPar)}>
+                                  ({formatScoreToPar(scoreToPar)})
+                                </span>
+                              )}
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-center">{team.hole_1 || '-'}</TableCell>
+                          <TableCell className="text-center">{team.hole_2 || '-'}</TableCell>
+                          <TableCell className="text-center">{team.hole_3 || '-'}</TableCell>
+                          <TableCell className="text-center">{team.hole_4 || '-'}</TableCell>
+                          <TableCell className="text-center">{team.hole_5 || '-'}</TableCell>
+                          <TableCell className="text-center">{team.hole_6 || '-'}</TableCell>
+                          <TableCell className="text-center">{team.hole_7 || '-'}</TableCell>
+                          <TableCell className="text-center">{team.hole_8 || '-'}</TableCell>
+                          <TableCell className="text-center">{team.hole_9 || '-'}</TableCell>
+                          <TableCell className="text-center font-semibold bg-muted">
+                            {team.front_nine || 0}
+                          </TableCell>
+                          <TableCell className="text-center">{team.hole_10 || '-'}</TableCell>
+                          <TableCell className="text-center">{team.hole_11 || '-'}</TableCell>
+                          <TableCell className="text-center">{team.hole_12 || '-'}</TableCell>
+                          <TableCell className="text-center">{team.hole_13 || '-'}</TableCell>
+                          <TableCell className="text-center">{team.hole_14 || '-'}</TableCell>
+                          <TableCell className="text-center">{team.hole_15 || '-'}</TableCell>
+                          <TableCell className="text-center">{team.hole_16 || '-'}</TableCell>
+                          <TableCell className="text-center">{team.hole_17 || '-'}</TableCell>
+                          <TableCell className="text-center">{team.hole_18 || '-'}</TableCell>
+                          <TableCell className="text-center font-semibold bg-muted">
+                            {team.back_nine || 0}
+                          </TableCell>
+                          <TableCell className="text-center font-bold bg-primary text-primary-foreground">
+                            {team.total_score || 0}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Score Entry Section */}
+      {/* Score Entry Section - Stays within normal padding */}
       {teamName && teamId && (
-        <div className="border rounded-lg p-6 bg-card">
-          <h2 className="text-xl font-semibold mb-4">Enter Your Score</h2>
+        <div className="max-w-[1400px] mx-auto px-4 md:px-6">
+          <div className="border rounded-lg p-6 bg-card">
+            <h2 className="text-xl font-semibold mb-4">Enter Your Score</h2>
 
-          <div className="flex items-center justify-between mb-4">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={handlePreviousHole}
-              disabled={currentHole === 1}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
+            <div className="flex items-center justify-between mb-4">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={handlePreviousHole}
+                disabled={currentHole === 1}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
 
-            <div className="text-center">
-              <h3 className="text-2xl font-bold">Hole {currentHole}</h3>
-              {currentHolePar && (
-                <p className="text-muted-foreground">Par {currentHolePar}</p>
-              )}
+              <div className="text-center">
+                <h3 className="text-2xl font-bold">Hole {currentHole}</h3>
+                {currentHolePar && (
+                  <p className="text-muted-foreground">Par {currentHolePar}</p>
+                )}
+              </div>
+
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={handleNextHole}
+                disabled={currentHole === 18}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
             </div>
 
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={handleNextHole}
-              disabled={currentHole === 18}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
+            <div className="space-y-4">
+              <div>
+                <Input
+                  type="number"
+                  placeholder="Enter score"
+                  value={scoreInput}
+                  onChange={(e) => setScoreInput(e.target.value)}
+                  className="text-center text-2xl h-16"
+                  min="1"
+                  max="20"
+                />
+                {currentHoleScore !== null && (
+                  <p className="text-sm text-muted-foreground mt-2 text-center">
+                    Current score: {currentHoleScore}
+                  </p>
+                )}
+              </div>
 
-          <div className="space-y-4">
-            <div>
-              <Input
-                type="number"
-                placeholder="Enter score"
-                value={scoreInput}
-                onChange={(e) => setScoreInput(e.target.value)}
-                className="text-center text-2xl h-16"
-                min="1"
-                max="20"
-              />
-              {currentHoleScore !== null && (
-                <p className="text-sm text-muted-foreground mt-2 text-center">
-                  Current score: {currentHoleScore}
-                </p>
+              {submitError && (
+                <p className="text-red-500 text-sm text-center">{submitError}</p>
               )}
+
+              <Button
+                className="w-full h-12 text-lg"
+                onClick={handleSubmitScore}
+                disabled={submitting || !scoreInput}
+              >
+                {submitting ? 'Submitting...' : 'Submit Score'}
+              </Button>
             </div>
-
-            {submitError && (
-              <p className="text-red-500 text-sm text-center">{submitError}</p>
-            )}
-
-            <Button
-              className="w-full h-12 text-lg"
-              onClick={handleSubmitScore}
-              disabled={submitting || !scoreInput}
-            >
-              {submitting ? 'Submitting...' : 'Submit Score'}
-            </Button>
           </div>
         </div>
       )}
