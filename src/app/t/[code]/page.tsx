@@ -10,6 +10,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface Team {
   team_id: string;
@@ -71,6 +74,12 @@ export default function TournamentPage({
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Score entry state
+  const [currentHole, setCurrentHole] = useState(1);
+  const [scoreInput, setScoreInput] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+
   // Use useMemo to get team name from URL or localStorage
   const teamName = useMemo(() => {
     if (teamFromUrl) {
@@ -91,6 +100,41 @@ export default function TournamentPage({
 
     return '';
   }, [code, teamFromUrl]);
+
+  // Get current team data
+  const currentTeam = useMemo(() => {
+    return teams.find(team => team.name === teamName);
+  }, [teams, teamName]);
+
+  // Get team ID from localStorage
+  const teamId = useMemo(() => {
+    if (typeof window !== 'undefined') {
+      const storedTeam = localStorage.getItem(`team_${code}`);
+      if (storedTeam) {
+        try {
+          const teamData = JSON.parse(storedTeam);
+          return teamData.teamId;
+        } catch (e) {
+          console.error('Error parsing stored team data:', e);
+        }
+      }
+    }
+    return null;
+  }, [code]);
+
+  // Get current hole par
+  const currentHolePar = useMemo(() => {
+    if (!course) return null;
+    const parKey = `hole_${currentHole}_par` as keyof Course;
+    return course[parKey];
+  }, [course, currentHole]);
+
+  // Get current hole score
+  const currentHoleScore = useMemo(() => {
+    if (!currentTeam) return null;
+    const scoreKey = `hole_${currentHole}` as keyof Team;
+    return currentTeam[scoreKey] as number | null;
+  }, [currentTeam, currentHole]);
 
   // Calculate par totals
   const parTotals = useMemo(() => {
@@ -170,28 +214,106 @@ export default function TournamentPage({
     return `${scoreToPar}`;
   };
 
-  useEffect(() => {
-    async function fetchScoreboard() {
-      try {
-        const res = await fetch(`/api/tournaments/${code}/scoreboard`);
-        if (res.ok) {
-          const data = await res.json();
-          setTeams(data.teams || []);
-          setCourse(data.course || null);
-        }
-      } catch (error) {
-        console.error('Error fetching scoreboard:', error);
-      } finally {
-        setLoading(false);
-      }
+  // Handle previous hole
+  const handlePreviousHole = () => {
+    if (currentHole > 1) {
+      setCurrentHole(currentHole - 1);
+      setScoreInput('');
+      setSubmitError('');
+    }
+  };
+
+  // Handle next hole
+  const handleNextHole = () => {
+    if (currentHole < 18) {
+      setCurrentHole(currentHole + 1);
+      setScoreInput('');
+      setSubmitError('');
+    }
+  };
+
+  // Handle submit score
+  const handleSubmitScore = async () => {
+    if (!scoreInput || !teamId) return;
+
+    const score = parseInt(scoreInput);
+    if (isNaN(score) || score < 1 || score > 20) {
+      setSubmitError('Please enter a valid score (1-20)');
+      return;
     }
 
-    fetchScoreboard();
+    setSubmitting(true);
+    setSubmitError('');
+
+    try {
+      const res = await fetch('/api/teams/update-score', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          teamId,
+          holeNumber: currentHole,
+          score,
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        setSubmitError(data.error || 'Failed to submit score');
+        return;
+      }
+
+      // Refresh scoreboard
+      await fetchScoreboard();
+
+      // Clear input and move to next hole
+      setScoreInput('');
+      if (currentHole < 18) {
+        setCurrentHole(currentHole + 1);
+      }
+    } catch (error) {
+      console.error('Error submitting score:', error);
+      setSubmitError('Failed to submit score');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  async function fetchScoreboard() {
+    try {
+      const res = await fetch(`/api/tournaments/${code}/scoreboard`);
+      if (res.ok) {
+        const data = await res.json();
+        setTeams(data.teams || []);
+        setCourse(data.course || null);
+      }
+    } catch (error) {
+      console.error('Error fetching scoreboard:', error);
+    }
+  }
+
+  useEffect(() => {
+    async function initialFetch() {
+      await fetchScoreboard();
+      setLoading(false);
+    }
+
+    initialFetch();
 
     // Optional: Poll for updates every 10 seconds
     const interval = setInterval(fetchScoreboard, 10000);
     return () => clearInterval(interval);
   }, [code]);
+
+  // Update score input when hole changes to show existing score
+  useEffect(() => {
+    if (currentHoleScore !== null) {
+      setScoreInput(currentHoleScore.toString());
+    } else {
+      setScoreInput('');
+    }
+  }, [currentHoleScore, currentHole]);
 
   if (loading) {
     return (
@@ -203,18 +325,18 @@ export default function TournamentPage({
   }
 
   return (
-    <div className="p-6">
+    <div className="p-6 max-w-[1400px] mx-auto">
       <div className="mb-6">
         <h1 className="text-2xl font-bold">Tournament Scoreboard</h1>
         <p className="text-muted-foreground">Code: {code}</p>
         {teamName && <p className="text-sm">Your Team: {teamName}</p>}
       </div>
 
-      <div className="rounded-md border overflow-x-auto">
+      <div className="rounded-md border overflow-x-auto mb-8">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="sticky left-0 bg-background z-10 min-w-37.5">Team</TableHead>
+              <TableHead className="sticky left-0 bg-background z-10 min-w-[150px]">Team</TableHead>
               <TableHead className="text-center">1</TableHead>
               <TableHead className="text-center">2</TableHead>
               <TableHead className="text-center">3</TableHead>
@@ -327,6 +449,71 @@ export default function TournamentPage({
           </TableBody>
         </Table>
       </div>
+
+      {/* Score Entry Section */}
+      {teamName && teamId && (
+        <div className="border rounded-lg p-6 bg-card">
+          <h2 className="text-xl font-semibold mb-4">Enter Your Score</h2>
+
+          <div className="flex items-center justify-between mb-4">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={handlePreviousHole}
+              disabled={currentHole === 1}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+
+            <div className="text-center">
+              <h3 className="text-2xl font-bold">Hole {currentHole}</h3>
+              {currentHolePar && (
+                <p className="text-muted-foreground">Par {currentHolePar}</p>
+              )}
+            </div>
+
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={handleNextHole}
+              disabled={currentHole === 18}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <Input
+                type="number"
+                placeholder="Enter score"
+                value={scoreInput}
+                onChange={(e) => setScoreInput(e.target.value)}
+                className="text-center text-2xl h-16"
+                min="1"
+                max="20"
+              />
+              {currentHoleScore !== null && (
+                <p className="text-sm text-muted-foreground mt-2 text-center">
+                  Current score: {currentHoleScore}
+                </p>
+              )}
+            </div>
+
+            {submitError && (
+              <p className="text-red-500 text-sm text-center">{submitError}</p>
+            )}
+
+            <Button
+              className="w-full h-12 text-lg"
+              onClick={handleSubmitScore}
+              disabled={submitting || !scoreInput}
+            >
+              {submitting ? 'Submitting...' : 'Submit Score'}
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
