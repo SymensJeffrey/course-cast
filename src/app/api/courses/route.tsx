@@ -1,8 +1,8 @@
-import { supabaseServer } from '@/lib/supabaseServer';
+import { supabase } from '@/lib/supabaseClient';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const { data, error } = await supabaseServer
+  const { data, error } = await supabase
     .from('courses')
     .select('course_id, name')
     .order('name');
