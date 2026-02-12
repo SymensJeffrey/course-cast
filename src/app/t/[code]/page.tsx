@@ -461,7 +461,7 @@ export default function TournamentPage({
 
       {/* Score Entry Section - Stays within normal padding */}
       {teamName && teamId && (
-        <div className="max-w-[1400px] mx-auto px-4 md:px-6">
+        <div className="max-sm:w-1/3">
           <div className="border rounded-lg p-6 bg-card">
             <h2 className="text-xl font-semibold mb-4">Enter Your Score</h2>
 
