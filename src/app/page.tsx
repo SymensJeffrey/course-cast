@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/Modal';
 
 import { Course } from '@/types/course';
+import RollingHills from '@/components/RollingHills';
 
 import {
   Select,
@@ -246,6 +247,7 @@ export default function Home() {
           </Button>
         </div>
       </Modal>
+      <RollingHills className="absolute bottom-0 left-0 w-full h-auto" />
     </main>
   );
 }
