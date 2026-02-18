@@ -7,7 +7,9 @@ export async function GET() {
     .select(`
       course_id,
       name,
-      location,
+      city,
+      state,
+      country,
       hole_1_par,
       hole_2_par,
       hole_3_par,
@@ -30,7 +32,6 @@ export async function GET() {
     .order('name');
 
   if (error) {
-    console.log(error)
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 

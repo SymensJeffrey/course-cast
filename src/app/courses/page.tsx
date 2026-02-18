@@ -15,7 +15,9 @@ import { Plus, Pencil, Trash2 } from 'lucide-react';
 interface Course {
   course_id: string;
   name: string;
-  location: string;
+  city: string | null;
+  state: string | null;
+  country: string | null;
   hole_1_par: number;
   hole_2_par: number;
   hole_3_par: number;
@@ -39,6 +41,12 @@ interface Course {
 export default function CoursesPage() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Format location string from city, state, country
+  const formatLocation = (course: Course) => {
+    const parts = [course.city, course.state, course.country].filter(Boolean);
+    return parts.length > 0 ? parts.join(', ') : '-';
+  };
 
   // Calculate total par for a course
   const calculateTotalPar = (course: Course) => {
@@ -193,7 +201,7 @@ export default function CoursesPage() {
                               {course.name}
                             </TableCell>
                             <TableCell className="text-muted-foreground">
-                              {course.location}
+                              {formatLocation(course)}
                             </TableCell>
                             <TableCell className="text-center">{course.hole_1_par}</TableCell>
                             <TableCell className="text-center">{course.hole_2_par}</TableCell>
