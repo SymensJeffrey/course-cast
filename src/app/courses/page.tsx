@@ -145,121 +145,115 @@ export default function CoursesPage() {
         </div>
 
         {/* Courses Table */}
-        <div className="mb-8">
-          <div className="overflow-x-auto -mx-4 md:mx-0">
-            <div className="px-4 md:px-0">
-              <div className="rounded-md border min-w-[1200px] max-w-[1400px] md:mx-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="sticky left-0 bg-background z-10 min-w-[200px]">Course Name</TableHead>
-                      <TableHead className="min-w-[150px]">Location</TableHead>
-                      <TableHead className="text-center min-w-[40px]">1</TableHead>
-                      <TableHead className="text-center min-w-[40px]">2</TableHead>
-                      <TableHead className="text-center min-w-[40px]">3</TableHead>
-                      <TableHead className="text-center min-w-[40px]">4</TableHead>
-                      <TableHead className="text-center min-w-[40px]">5</TableHead>
-                      <TableHead className="text-center min-w-[40px]">6</TableHead>
-                      <TableHead className="text-center min-w-[40px]">7</TableHead>
-                      <TableHead className="text-center min-w-[40px]">8</TableHead>
-                      <TableHead className="text-center min-w-[40px]">9</TableHead>
-                      <TableHead className="text-center font-semibold bg-muted min-w-[50px]">Out</TableHead>
-                      <TableHead className="text-center min-w-[40px]">10</TableHead>
-                      <TableHead className="text-center min-w-[40px]">11</TableHead>
-                      <TableHead className="text-center min-w-[40px]">12</TableHead>
-                      <TableHead className="text-center min-w-[40px]">13</TableHead>
-                      <TableHead className="text-center min-w-[40px]">14</TableHead>
-                      <TableHead className="text-center min-w-[40px]">15</TableHead>
-                      <TableHead className="text-center min-w-[40px]">16</TableHead>
-                      <TableHead className="text-center min-w-[40px]">17</TableHead>
-                      <TableHead className="text-center min-w-[40px]">18</TableHead>
-                      <TableHead className="text-center font-semibold bg-muted min-w-[50px]">In</TableHead>
-                      <TableHead className="text-center font-bold bg-primary text-primary-foreground min-w-[60px]">Total</TableHead>
-                      <TableHead className="sticky right-0 bg-background z-10 text-center min-w-[120px]">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {courses.length === 0 ? (
-                      <TableRow>
-                        <TableCell colSpan={24} className="text-center text-muted-foreground py-8">
-                          <div className="flex flex-col items-center gap-2">
-                            <p>No courses yet</p>
-                            <Button onClick={handleAddCourse} variant="outline">
-                              <Plus className="mr-2 h-4 w-4" />
-                              Add Your First Course
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      courses.map((course) => {
-                        const { frontNine, backNine, total } = calculateTotalPar(course);
+        <div className="rounded-md border overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="sticky left-0 bg-background z-10 min-w-[200px]">Course Name</TableHead>
+                <TableHead className="min-w-[150px]">Location</TableHead>
+                <TableHead className="text-center min-w-[40px]">1</TableHead>
+                <TableHead className="text-center min-w-[40px]">2</TableHead>
+                <TableHead className="text-center min-w-[40px]">3</TableHead>
+                <TableHead className="text-center min-w-[40px]">4</TableHead>
+                <TableHead className="text-center min-w-[40px]">5</TableHead>
+                <TableHead className="text-center min-w-[40px]">6</TableHead>
+                <TableHead className="text-center min-w-[40px]">7</TableHead>
+                <TableHead className="text-center min-w-[40px]">8</TableHead>
+                <TableHead className="text-center min-w-[40px]">9</TableHead>
+                <TableHead className="text-center font-semibold bg-muted min-w-[50px]">Out</TableHead>
+                <TableHead className="text-center min-w-[40px]">10</TableHead>
+                <TableHead className="text-center min-w-[40px]">11</TableHead>
+                <TableHead className="text-center min-w-[40px]">12</TableHead>
+                <TableHead className="text-center min-w-[40px]">13</TableHead>
+                <TableHead className="text-center min-w-[40px]">14</TableHead>
+                <TableHead className="text-center min-w-[40px]">15</TableHead>
+                <TableHead className="text-center min-w-[40px]">16</TableHead>
+                <TableHead className="text-center min-w-[40px]">17</TableHead>
+                <TableHead className="text-center min-w-[40px]">18</TableHead>
+                <TableHead className="text-center font-semibold bg-muted min-w-[50px]">In</TableHead>
+                <TableHead className="text-center font-bold bg-primary text-primary-foreground min-w-[60px]">Total</TableHead>
+                <TableHead className="sticky right-0 bg-background z-10 text-center min-w-[120px]">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {courses.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={24} className="text-center text-muted-foreground py-8">
+                    <div className="flex flex-col items-center gap-2">
+                      <p>No courses yet</p>
+                      <Button onClick={handleAddCourse} variant="outline">
+                        <Plus className="mr-2 h-4 w-4" />
+                        Add Your First Course
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                courses.map((course) => {
+                  const { frontNine, backNine, total } = calculateTotalPar(course);
 
-                        return (
-                          <TableRow key={course.course_id}>
-                            <TableCell className="sticky left-0 bg-background z-10 font-medium">
-                              {course.name}
-                            </TableCell>
-                            <TableCell className="text-muted-foreground">
-                              {formatLocation(course)}
-                            </TableCell>
-                            <TableCell className="text-center">{course.hole_1_par}</TableCell>
-                            <TableCell className="text-center">{course.hole_2_par}</TableCell>
-                            <TableCell className="text-center">{course.hole_3_par}</TableCell>
-                            <TableCell className="text-center">{course.hole_4_par}</TableCell>
-                            <TableCell className="text-center">{course.hole_5_par}</TableCell>
-                            <TableCell className="text-center">{course.hole_6_par}</TableCell>
-                            <TableCell className="text-center">{course.hole_7_par}</TableCell>
-                            <TableCell className="text-center">{course.hole_8_par}</TableCell>
-                            <TableCell className="text-center">{course.hole_9_par}</TableCell>
-                            <TableCell className="text-center font-semibold bg-muted">
-                              {frontNine}
-                            </TableCell>
-                            <TableCell className="text-center">{course.hole_10_par}</TableCell>
-                            <TableCell className="text-center">{course.hole_11_par}</TableCell>
-                            <TableCell className="text-center">{course.hole_12_par}</TableCell>
-                            <TableCell className="text-center">{course.hole_13_par}</TableCell>
-                            <TableCell className="text-center">{course.hole_14_par}</TableCell>
-                            <TableCell className="text-center">{course.hole_15_par}</TableCell>
-                            <TableCell className="text-center">{course.hole_16_par}</TableCell>
-                            <TableCell className="text-center">{course.hole_17_par}</TableCell>
-                            <TableCell className="text-center">{course.hole_18_par}</TableCell>
-                            <TableCell className="text-center font-semibold bg-muted">
-                              {backNine}
-                            </TableCell>
-                            <TableCell className="text-center font-bold bg-primary text-primary-foreground">
-                              {total}
-                            </TableCell>
-                            <TableCell className="sticky right-0 bg-background z-10">
-                              <div className="flex items-center justify-center gap-2">
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  onClick={() => handleEditCourse(course.course_id)}
-                                  title="Edit course"
-                                >
-                                  <Pencil className="h-4 w-4" />
-                                </Button>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  onClick={() => handleDeleteCourse(course.course_id, course.name)}
-                                  title="Delete course"
-                                  className="text-destructive hover:text-destructive"
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })
-                    )}
-                  </TableBody>
-                </Table>
-              </div>
-            </div>
-          </div>
+                  return (
+                    <TableRow key={course.course_id}>
+                      <TableCell className="sticky left-0 bg-background z-10 font-medium">
+                        {course.name}
+                      </TableCell>
+                      <TableCell className="text-muted-foreground">
+                        {formatLocation(course)}
+                      </TableCell>
+                      <TableCell className="text-center">{course.hole_1_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_2_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_3_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_4_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_5_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_6_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_7_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_8_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_9_par}</TableCell>
+                      <TableCell className="text-center font-semibold bg-muted">
+                        {frontNine}
+                      </TableCell>
+                      <TableCell className="text-center">{course.hole_10_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_11_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_12_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_13_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_14_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_15_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_16_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_17_par}</TableCell>
+                      <TableCell className="text-center">{course.hole_18_par}</TableCell>
+                      <TableCell className="text-center font-semibold bg-muted">
+                        {backNine}
+                      </TableCell>
+                      <TableCell className="text-center font-bold bg-primary text-primary-foreground">
+                        {total}
+                      </TableCell>
+                      <TableCell className="sticky right-0 bg-background z-10">
+                        <div className="flex items-center justify-center gap-2">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleEditCourse(course.course_id)}
+                            title="Edit course"
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleDeleteCourse(course.course_id, course.name)}
+                            title="Delete course"
+                            className="text-destructive hover:text-destructive"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              )}
+            </TableBody>
+          </Table>
         </div>
       </div>
     </div>
