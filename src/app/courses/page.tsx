@@ -62,7 +62,7 @@ export default function CoursesPage() {
   // Fetch courses from API
   async function fetchCourses() {
     try {
-      const res = await fetch('/api/courses');
+      const res = await fetch('/api/courses/all');
       if (res.ok) {
         const data = await res.json();
         setCourses(data.courses || []);

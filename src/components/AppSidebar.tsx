@@ -18,12 +18,12 @@ const items = [
     title: "Home",
     url: "/",
     icon: Home,
-  }
-  // {
-  //   title: "Courses",
-  //   url: "#",
-  //   icon: Inbox,
-  // },
+  },
+  {
+    title: "Courses",
+    url: "/courses",
+    icon: Inbox,
+  },
   // {
   //   title: "Settings",
   //   url: "#",
