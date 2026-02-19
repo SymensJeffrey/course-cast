@@ -20,7 +20,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'sm' }: ModalPr
       className="fixed inset-0 z-50 overflow-y-auto bg-black/50"
       onClick={onClose}
     >
-      <div className="min-h-full flex items-start sm:items-center justify-center p-4 overflow-x-hidden">
+      <div className="min-h-full flex items-center justify-center p-4 overflow-x-hidden">
         <div
           className={`bg-white rounded-xl shadow-lg w-full ${maxWidth} relative my-4 sm:my-8 overflow-hidden`}
           onClick={(e) => e.stopPropagation()}
