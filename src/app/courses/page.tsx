@@ -215,7 +215,7 @@ export default function CoursesPage() {
             {/* Par Inputs — Front 9 */}
             <div>
               <p className="text-sm font-semibold mb-2">Front 9 — Par</p>
-              <div className="grid grid-cols-9 gap-1">
+              <div className="grid grid-cols-9 gap-4">
                 {holeNumbers.slice(0, 9).map((hole) => {
                   const key = `hole_${hole}_par` as keyof typeof form;
                   return (
@@ -238,7 +238,7 @@ export default function CoursesPage() {
             {/* Par Inputs — Back 9 */}
             <div>
               <p className="text-sm font-semibold mb-2">Back 9 — Par</p>
-              <div className="grid grid-cols-9 gap-1">
+              <div className="grid grid-cols-9 gap-4">
                 {holeNumbers.slice(9, 18).map((hole) => {
                   const key = `hole_${hole}_par` as keyof typeof form;
                   return (
