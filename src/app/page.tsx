@@ -247,7 +247,7 @@ export default function Home() {
           </Button>
         </div>
       </Modal>
-      <RollingHills className="absolute bottom-0 left-0 w-full h-auto" />
+      <RollingHills className="absolute bottom-0 left-0 w-full h-auto pointer-events-none" />
     </main>
   );
 }
