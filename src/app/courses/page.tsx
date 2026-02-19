@@ -116,7 +116,7 @@ export default function CoursesPage() {
     }
     setSubmitting(true);
     try {
-      const res = await fetch('/api/courses', {
+      const res = await fetch('/api/courses/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
@@ -183,7 +183,7 @@ export default function CoursesPage() {
 
         {/* Add Course Modal */}
         <Modal isOpen={isModalOpen} onClose={handleCloseModal} title="Add Course">
-          <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-1">
+          <div className="space-y-4 max-h-[70vh] overflow-y-auto p-1">
             {/* Course Info */}
             <div className="space-y-2">
               <label className="block text-sm font-medium">
