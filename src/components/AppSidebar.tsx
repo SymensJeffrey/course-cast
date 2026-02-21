@@ -36,7 +36,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarHeader>Course Cast</SidebarHeader>
+          <SidebarHeader className="text-2xl">Course Cast</SidebarHeader>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
