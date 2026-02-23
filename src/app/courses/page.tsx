@@ -11,8 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from '@/components/ui/button';
 import { Plus, Pencil, Trash2 } from 'lucide-react';
-import { Modal } from '@/components/Modal'; // adjust path as needed
-
+import { Modal } from '@/components/Modal';
 interface Course {
   course_id: string;
   name: string;

@@ -30,12 +30,12 @@ export default function Home() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [courseId, setCourseId] = useState('');
 
-  // Check localStorage when code input changes
+
   function handleCodeChange(value: string) {
     const upperValue = value.toUpperCase();
     setCode(upperValue);
 
-    // Check if we have stored team info for this tournament
+
     if (upperValue && typeof window !== 'undefined') {
       const storedTeam = localStorage.getItem(`team_${upperValue}`);
       if (storedTeam) {
@@ -46,7 +46,7 @@ export default function Home() {
           console.error('Error parsing stored team data:', e);
         }
       } else {
-        // Clear name if switching to a tournament we haven't joined
+
         setName('');
       }
     }
@@ -86,7 +86,7 @@ export default function Home() {
     setLoading(true);
     setError('');
 
-    // First validate the tournament code
+
     const validateRes = await fetch('/api/tournaments/validate', {
       method: 'POST',
       body: JSON.stringify({ code }),
@@ -100,14 +100,14 @@ export default function Home() {
       return;
     }
 
-    // If admin, go directly to admin page
+
     if (validateData.isAdmin) {
       setLoading(false);
       router.push(`/admin/${code}`);
       return;
     }
 
-    // Check if team already exists for this tournament
+
     const checkTeamRes = await fetch('/api/teams/check', {
       method: 'POST',
       headers: {
@@ -122,7 +122,7 @@ export default function Home() {
     const checkTeamData = await checkTeamRes.json();
 
     if (checkTeamRes.ok && checkTeamData.exists) {
-      // Team already exists, just store info and redirect
+
       localStorage.setItem(`team_${code}`, JSON.stringify({
         teamId: checkTeamData.team.team_id,
         teamName: checkTeamData.team.name,
@@ -133,7 +133,6 @@ export default function Home() {
       return;
     }
 
-    // If not admin and team doesn't exist, create the team
     const teamRes = await fetch('/api/teams/create', {
       method: 'POST',
       headers: {
@@ -154,14 +153,13 @@ export default function Home() {
       return;
     }
 
-    // Store team info in localStorage
+
     localStorage.setItem(`team_${code}`, JSON.stringify({
       teamId: teamData.team.team_id,
       teamName: teamData.team.name,
       tournamentCode: code,
     }));
 
-    // Successfully created team, navigate to tournament page
     router.push(`/t/${code}`);
   }
 

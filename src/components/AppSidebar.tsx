@@ -5,7 +5,6 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -23,12 +22,7 @@ const items = [
     title: "Courses",
     url: "/courses",
     icon: LandPlot,
-  },
-  // {
-  //   title: "Settings",
-  //   url: "#",
-  //   icon: Settings,
-  // },
+  }
 ]
 
 export function AppSidebar() {
