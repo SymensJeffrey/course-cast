@@ -12,7 +12,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Get the tournament
     const { data: tournament, error: tournamentError } = await supabase
       .from('tournaments')
       .select('tournament_id')
@@ -26,7 +25,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Check if team exists
     const { data: team, error: teamError } = await supabase
       .from('teams')
       .select('*')
