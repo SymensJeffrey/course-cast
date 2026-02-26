@@ -25,7 +25,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Check if team name already exists in this tournament
     const { data: existingTeam } = await supabase
       .from('teams')
       .select('team_id')
@@ -40,7 +39,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Create the team
     const { data: team, error: teamError } = await supabase
       .from('teams')
       .insert({
