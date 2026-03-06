@@ -8,7 +8,6 @@ export async function GET(
   try {
     const { code } = await params;
 
-    // Get tournament with course info
     const { data: tournament, error: tournamentError } = await supabase
       .from('tournaments')
       .select(`
@@ -45,7 +44,6 @@ export async function GET(
       );
     }
 
-    // Get all teams for this tournament, ordered by total score
     const { data: teams, error: teamsError } = await supabase
       .from('teams')
       .select('*')
