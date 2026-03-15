@@ -18,8 +18,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Invalid code' }, { status: 404 });
   }
 
-  // You can add admin logic here if you have an admin_code column
-  // For now, assuming all codes are for players
   const isAdmin = false;
 
   return NextResponse.json({

@@ -26,7 +26,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Update the specific hole score
     const columnName = `hole_${holeNumber}`;
     const { data, error } = await supabase
       .from('teams')
